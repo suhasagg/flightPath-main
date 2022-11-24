@@ -41,13 +41,13 @@ func (r *restApi) GetFlightStartingAndEndingAirportCodeHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	airportCodes := r.flightJourneySvc.GetFlightStartingAndEndingAirportCode(data.Flights)
-	/*
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
-			return
-		}
-	*/
+	airportCodes, err := r.flightJourneySvc.GetFlightStartingAndEndingAirportCode(data.Flights)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{"starting_airport": airportCodes[0], "ending_airport": airportCodes[1]})
 
 }

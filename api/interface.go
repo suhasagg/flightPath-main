@@ -1,5 +1,5 @@
 package api
 
 type FlightJourneyInterface interface {
-	GetFlightStartingAndEndingAirportCode(data [][]string) []string
+	GetFlightStartingAndEndingAirportCode(data [][]string) ([]string, error)
 }
