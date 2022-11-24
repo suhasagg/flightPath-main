@@ -13,8 +13,8 @@ func NewFlightJourneyService() *flightJourneySvc {
 
 // GetFlightStartingAndEndingAirportCode searches for possible flight path and return starting and ending airport code.
 func (svc *flightJourneySvc) GetFlightStartingAndEndingAirportCode(tickets [][]string) ([]string, error) {
-	airports := airportsinlexicographicOrder(tickets)
-	trace, err := Search_Best_Time(tickets, airports[0])
+
+	trace, err := Search_Best_Time(tickets)
 
 	if err != nil {
 		return nil, err
@@ -30,16 +30,32 @@ In a connected graph with an Eulerian path, there are only two cases:
 1) There is one node with one more outdegree than indegree and another node with one more indegree than out degree. In this case, one have to pick the node with more outdegree than indegree as the starting node, an Eulerian path ends at the node with more bigger indegree eventually.
 2) All nodes with indegree == outdegree. In this case, one can pick the starting node randomly (here its is lexicographic first airport), an Eulerian path ends at the starting node eventually.
 ***/
-func Search_Best_Time(tickets [][]string, lexicographicfirstAirport string) ([]string, error) {
+func Search_Best_Time(tickets [][]string) ([]string, error) {
 	cnt := make(map[string]int)
 	for _, p := range tickets {
 		cnt[p[0]]++
 		cnt[p[1]]--
 	}
 
+	flag := false
+
 	start := tickets[0][0]
 	cntInOutdegreepositive := 0
 	cntInOutdegreenegative := 0
+
+	for _, inOutDegree := range cnt {
+
+		if inOutDegree == 0 {
+			flag = true
+		} else {
+			flag = false
+		}
+	}
+
+	if flag {
+		airports := airportsinlexicographicOrder(tickets)
+		start = airports[0]
+	}
 
 	for _, inOutDegree := range cnt {
 		if inOutDegree > 1 {
@@ -71,10 +87,6 @@ func Search_Best_Time(tickets [][]string, lexicographicfirstAirport string) ([]s
 
 	}
 	for vertex, inOutDegree := range cnt {
-
-		if inOutDegree == 0 {
-			start = lexicographicfirstAirport
-		}
 
 		if inOutDegree > 0 {
 			start = vertex
@@ -119,16 +131,32 @@ func DFS(start string, m map[string][]string, routes *[]string) {
 
 }
 
-func Search_Best_Memory(tickets [][]string, lexicographicfirstAirport string) ([]string, error) {
+func Search_Best_Memory(tickets [][]string) ([]string, error) {
 	cnt := make(map[string]int)
 	for _, p := range tickets {
 		cnt[p[0]]++
 		cnt[p[1]]--
 	}
 
+	flag := false
+
 	start := tickets[0][0]
 	cntInOutdegreepositive := 0
 	cntInOutdegreenegative := 0
+
+	for _, inOutDegree := range cnt {
+
+		if inOutDegree == 0 {
+			flag = true
+		} else {
+			flag = false
+		}
+	}
+
+	if flag {
+		airports := airportsinlexicographicOrder(tickets)
+		start = airports[0]
+	}
 
 	for _, inOutDegree := range cnt {
 		if inOutDegree > 1 {
@@ -160,10 +188,6 @@ func Search_Best_Memory(tickets [][]string, lexicographicfirstAirport string) ([
 
 	}
 	for vertex, inOutDegree := range cnt {
-
-		if inOutDegree == 0 {
-			start = lexicographicfirstAirport
-		}
 
 		if inOutDegree > 0 {
 			start = vertex
