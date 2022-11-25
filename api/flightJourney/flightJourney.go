@@ -49,6 +49,7 @@ func Search_Best_Time(tickets [][]string) ([]string, error) {
 			flag = true
 		} else {
 			flag = false
+			break
 		}
 	}
 
@@ -150,6 +151,7 @@ func Search_Best_Memory(tickets [][]string) ([]string, error) {
 			flag = true
 		} else {
 			flag = false
+			break
 		}
 	}
 
