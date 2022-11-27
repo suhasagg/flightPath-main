@@ -56,6 +56,7 @@ func Search_Best_Time(tickets [][]string) ([]string, error) {
 	if flag {
 		airports := airportsinlexicographicOrder(tickets)
 		start = airports[0]
+		return []string{start, start}, nil
 	}
 
 	for _, inOutDegree := range cnt {
@@ -96,7 +97,6 @@ func Search_Best_Time(tickets [][]string) ([]string, error) {
 	}
 
 	m := make(map[string][]string, len(tickets)+1)
-	var routes []string
 
 	for _, t := range tickets {
 		m[t[0]] = append(m[t[0]], t[1])
@@ -106,29 +106,115 @@ func Search_Best_Time(tickets [][]string) ([]string, error) {
 		sort.Strings(m[k])
 	}
 
-	DFS(start, m, &routes)
+	routes := make([]string, len(tickets)+1)
+	head := len(tickets)
 
-	// reverse ans array
+	DFS(start, m, &head, routes)
 
-	i, j := 0, len(routes)-1
-	for i < j {
-		routes[i], routes[j] = routes[j], routes[i]
-		i++
-		j--
-	}
-
-	return []string{routes[0], routes[len(routes)-1]}, nil
+	return []string{routes[0], routes[len(tickets)]}, nil
 }
 
-func DFS(start string, m map[string][]string, routes *[]string) {
+func Search_without_lexicographic(tickets [][]string) ([]string, error) {
+	m := make(map[string][]string, len(tickets)+1)
+	cnt := make(map[string]int)
+	for _, p := range tickets {
+		cnt[p[0]]++
+		cnt[p[1]]--
+	}
+
+	flag := false
+
+	start := tickets[0][0]
+	cntInOutdegreepositive := 0
+	cntInOutdegreenegative := 0
+
+	for _, inOutDegree := range cnt {
+
+		if inOutDegree == 0 {
+			flag = true
+		} else {
+			flag = false
+			break
+		}
+	}
+
+	if flag {
+		airports := airportsinlexicographicOrder(tickets)
+		start = airports[0]
+		return []string{start, start}, nil
+	}
+
+	for _, inOutDegree := range cnt {
+		if inOutDegree > 1 {
+			return nil, errors.New("in a flight path graph inoutdegree greater than 1 is not possible")
+		}
+
+		if inOutDegree < -1 {
+			return nil, errors.New("in a flight path graph inoutdegree less than -1 is not possible")
+		}
+
+		if inOutDegree == 1 {
+			cntInOutdegreepositive++
+
+		}
+
+		if inOutDegree == -1 {
+			cntInOutdegreenegative++
+
+		}
+
+		if cntInOutdegreepositive > 1 {
+			return nil, errors.New("in a flight path graph two nodes can't have inoutdegree equal to 1")
+		}
+
+		if cntInOutdegreenegative > 1 {
+			return nil, errors.New("in a flight path graph two nodes can't have inoutdegree equal to -1")
+
+		}
+
+	}
+	for vertex, inOutDegree := range cnt {
+
+		if inOutDegree > 0 {
+			start = vertex
+			break
+		}
+	}
+
+	for _, t := range tickets {
+		m[t[0]] = append(m[t[0]], t[1])
+	}
+
+	routes := make([]string, len(tickets)+1)
+	head := len(tickets)
+
+	DFSwithoutlexicographic(start, m, &head, routes)
+
+	return []string{start, routes[len(tickets)]}, nil
+}
+
+func DFSwithoutlexicographic(start string, m map[string][]string, head *int, routes []string) {
 
 	for len(m[start]) > 0 {
 		cur := m[start][0]
 		m[start] = m[start][1:]
-		DFS(cur, m, routes)
+		DFSwithoutlexicographic(cur, m, head, routes)
 	}
 
-	*routes = append(*routes, start)
+	routes[*head] = start
+	*head--
+}
+
+func DFS(start string, m map[string][]string, head *int, routes []string) {
+
+	for len(m[start]) > 0 {
+		cur := m[start][0]
+		m[start] = m[start][1:]
+		DFS(cur, m, head, routes)
+	}
+
+	routes[*head] = start
+	*head--
 
 }
 
@@ -158,6 +244,7 @@ func Search_Best_Memory(tickets [][]string) ([]string, error) {
 	if flag {
 		airports := airportsinlexicographicOrder(tickets)
 		start = airports[0]
+		return []string{start, start}, nil
 	}
 
 	for _, inOutDegree := range cnt {
@@ -204,6 +291,7 @@ func Search_Best_Memory(tickets [][]string) ([]string, error) {
 			return tickets[i][1] < tickets[j][1]
 		}
 	})
+
 	edges := make(map[string][]int)
 	for i := 0; i < len(tickets); {
 		j := i + 1
@@ -219,7 +307,7 @@ func Search_Best_Memory(tickets [][]string) ([]string, error) {
 
 	visit(start, routes, &head, tickets, edges)
 
-	return []string{routes[0], routes[len(routes)-1]}, nil
+	return []string{routes[0], routes[len(tickets)]}, nil
 }
 
 func visit(airport string, results []string, head *int, tickets [][]string, edges map[string][]int) {
