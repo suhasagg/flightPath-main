@@ -42,7 +42,7 @@ func Test_flightJourneySvc_GetFlightStartingAndEndingAirportCode_Positive(t *tes
 			want1: "JFK",
 			want2: "SFO",
 		},
-                   //All nodes with indegree == outdegree. In this case, one can pick the starting node randomly (here its is lexicographic first airport), an Eulerian path ends at the starting node eventually.         
+		// All nodes with indegree == outdegree. In this case, one can pick the starting node randomly (here its is lexicographic first airport), an Eulerian path ends at the starting node eventually.
 		{
 			name:  "multiple flights",
 			args:  [][]string{{"CHI", "AXA"}, {"TIA", "ANU"}, {"ANU", "JFK"}, {"JFK", "ANU"}, {"ANU", "CHI"}, {"TIA", "ANU"}, {"AXA", "TIA"}, {"TIA", "JFK"}, {"ANU", "TIA"}, {"JFK", "TIA"}},
@@ -75,7 +75,7 @@ func Test_flightJourneySvc_GetFlightStartingAndEndingAirportCode_Negative(t *tes
 		want1 string
 		want2 string
 	}{
-                //In valid cases of flight path   
+		// In valid cases of flight path
 		{name: "two flights",
 			args: [][]string{{"SFO", "EWR"}, {"SFO", "ATL"}},
 		},

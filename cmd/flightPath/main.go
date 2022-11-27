@@ -48,6 +48,6 @@ func (r *restApi) GetFlightStartingAndEndingAirportCodeHandler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"starting_airport": airportCodes[0], "ending_airport": airportCodes[1]})
+	c.JSON(http.StatusOK, gin.H{"Starting_Ending_Flights": airportCodes})
 
 }

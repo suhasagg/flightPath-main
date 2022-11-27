@@ -238,7 +238,7 @@ func visit(airport string, results []string, head *int, tickets [][]string, edge
 func airportsinlexicographicOrder(tickets [][]string) []string {
 	s := map[string]bool{}
 	for x, b := range tickets {
-		for y, _ := range b {
+		for y := range b {
 			s[tickets[x][y]] = true
 		}
 	}
