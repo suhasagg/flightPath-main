@@ -49,7 +49,7 @@ func (svc *flightJourneySvc) GetFlightStartingAndEndingAirportCode(tickets [][]s
 }
 ```
 
-1)Three Algorithms are available for benchmarking 
+Three Algorithms are available for benchmarking 
 
 a)Search_Best_Time
   (Lexicographic Flight path is generated)
