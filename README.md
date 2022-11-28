@@ -32,3 +32,30 @@ http://localhost:8080/calculate \
 -H 'content-type: application/json' \
 -d '{"flights":[["JFK","SFO"],["JFK","ATL"]]}'
 ```
+
+api/flightJourney/flightJourney.go
+
+```
+func (svc *flightJourneySvc) GetFlightStartingAndEndingAirportCode(tickets [][]string) ([]string, error) {
+
+	trace, err := Search_Best_Time(tickets)
+
+	if err != nil {
+		return nil, err
+
+	}
+
+	return trace, nil
+}
+```
+
+1)Three Algorithms are available for benchmarking 
+
+a)Search_Best_Time
+  (Lexicographic Flight path is generated)
+
+b)Search_Best_Memory
+  (For Best Memory optimisation of code - data structures used are optimised for memory)
+
+c)Search_without_lexicographic
+  (This Algorithm avoids initial sorting to improve time complexity as flight path generated need not be lexicographic)
